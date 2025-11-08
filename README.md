@@ -42,8 +42,11 @@ mvn spring-boot:run
 The application will be available at `http://localhost:8080/tasks`.
 
 
-Once the application starts, it will be available at:  
-👉 **http://localhost:8080/tasks**
+4️⃣ Test the API using curl or through suitable IDE and Postman
+
+For Testing using curl, Leave the Spring Boot terminal running, and open a new terminal window or tab to run the curl commands given below in the Example Usage(via Curl) Section.
+
+Navigate to the project folder if not already there
 
 ---
 
