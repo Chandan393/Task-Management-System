@@ -1,6 +1,5 @@
 package com.example.taskmanager;
 
-import com.example.taskmanager.model.TaskStatus;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
@@ -24,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-// Ensure the in-memory repository is reset after each test method to avoid state leakage
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class TaskControllerTest {
 
@@ -36,35 +34,35 @@ public class TaskControllerTest {
 
     @Test
     public void createGetUpdateDeleteFlow() throws Exception {
-        // Step 1: Prepare request payload
         String due = LocalDate.now().plusDays(2).toString();
+
+        // Create Task payload
         Map<String, Object> payload = new HashMap<>();
         payload.put("title", "My Test Task");
         payload.put("description", "Testing controller");
-        payload.put("status", TaskStatus.PENDING.name());
+        payload.put("status", ""); // empty string to test default PENDING
         payload.put("dueDate", due);
 
-        // Step 2: Create a new task (POST /tasks)
+        // Create Task
         String response = mvc.perform(post("/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(payload)))
-                .andDo(print()) // prints request + response for debugging
+                .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.status").value("PENDING")) // default applied
                 .andReturn().getResponse().getContentAsString();
 
-        // Extract id safely using ObjectMapper
-        JsonNode node = mapper.readTree(response);
-        String id = node.get("id").asText();
+        String id = mapper.readTree(response).get("id").asText();
 
-        // Step 3: Get task by ID (GET /tasks/{id})
+        // Get Task by ID
         mvc.perform(get("/tasks/" + id))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("My Test Task"))
-                .andExpect(jsonPath("$.description").value("Testing controller"));
+                .andExpect(jsonPath("$.status").value("PENDING"));
 
-        // Step 4: Update task (PUT /tasks/{id})
+        // Update Task
         Map<String, Object> update = new HashMap<>();
         update.put("title", "Updated Task Title");
         update.put("description", "Updated Desc");
@@ -77,18 +75,19 @@ public class TaskControllerTest {
                 .andExpect(jsonPath("$.title").value("Updated Task Title"))
                 .andExpect(jsonPath("$.description").value("Updated Desc"));
 
-        // Step 5: List tasks (GET /tasks)
+        // List Tasks
         mvc.perform(get("/tasks"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray());
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].id").value(id));
 
-        // Step 6: Delete the task (DELETE /tasks/{id})
+        // Delete Task
         mvc.perform(delete("/tasks/" + id))
                 .andDo(print())
                 .andExpect(status().isNoContent());
 
-        // Step 7: Verify deletion (GET /tasks/{id} -> 404)
+        // Verify Deletion
         mvc.perform(get("/tasks/" + id))
                 .andDo(print())
                 .andExpect(status().isNotFound());

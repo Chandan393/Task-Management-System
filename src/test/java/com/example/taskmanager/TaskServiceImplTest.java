@@ -40,26 +40,28 @@ public class TaskServiceImplTest {
     public void testCreateTask_Success() {
         when(repository.save(any(Task.class))).thenReturn(sampleTask);
 
+        // Pass status as string; service handles default
         Task result = taskService.createTask(
                 "Sample Task",
                 "Sample Description",
-                TaskStatus.PENDING,
+                "PENDING",
                 LocalDate.now().plusDays(3)
         );
 
         assertNotNull(result);
         assertEquals("Sample Task", result.getTitle());
+        assertEquals(TaskStatus.PENDING, result.getStatus());
         verify(repository, times(1)).save(any(Task.class));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateTask_MissingTitle() {
-        taskService.createTask("", "desc", TaskStatus.PENDING, LocalDate.now().plusDays(1));
+        taskService.createTask("", "desc", "PENDING", LocalDate.now().plusDays(1));
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testCreateTask_PastDueDate() {
-        taskService.createTask("Task 1", "desc", TaskStatus.PENDING, LocalDate.now().minusDays(1));
+        taskService.createTask("Task 1", "desc", "PENDING", LocalDate.now().minusDays(1));
     }
 
     @Test
@@ -90,7 +92,7 @@ public class TaskServiceImplTest {
                 "1",
                 Optional.of("Updated Title"),
                 Optional.of("Updated Desc"),
-                Optional.of(TaskStatus.IN_PROGRESS),
+                Optional.of(TaskStatus.valueOf("IN_PROGRESS")),
                 Optional.of(LocalDate.now().plusDays(5))
         );
 

@@ -20,7 +20,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task createTask(String title, String description, TaskStatus status, LocalDate dueDate) {
+    public Task createTask(String title, String description, String status, LocalDate dueDate) {
         validateTitle(title);
         validateDueDate(dueDate);
 
@@ -28,7 +28,7 @@ public class TaskServiceImpl implements TaskService {
                 UUID.randomUUID().toString(),
                 title.trim(),
                 description,
-                status != null ? status : TaskStatus.PENDING,
+                (status == null || status.trim().isEmpty()) ? TaskStatus.PENDING : TaskStatus.valueOf(status.trim().toUpperCase()),
                 dueDate
         );
         return repository.save(task);

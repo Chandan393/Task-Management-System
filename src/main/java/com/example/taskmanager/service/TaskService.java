@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TaskService {
-    Task createTask(String title, String description, TaskStatus status, LocalDate dueDate);
+    Task createTask(String title, String description, String status, LocalDate dueDate);
     Optional<Task> getTask(String id);
     Task updateTask(String id, Optional<String> title, Optional<String> description, Optional<TaskStatus> status, Optional<LocalDate> dueDate);
     void deleteTask(String id);
