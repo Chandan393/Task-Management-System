@@ -11,6 +11,18 @@ This project demonstrates clean architecture using **Controller → Service → 
 
 ---
 
+## 🏗️ Setup & Run
+
+### 1️⃣ Clone the repository
+
+First, navigate to your desired folder in the terminal:
+
+```bash
+cd /path/to/your/desired/folder
+git clone https://github.com/https://github.com/Chandan393/Task-Management-System.git
+
+---
+
 ## 🚀 How to Run
 
 ### 1️⃣ Build the project
