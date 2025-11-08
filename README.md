@@ -15,25 +15,32 @@ This project demonstrates clean architecture using **Controller → Service → 
 
 ### 1️⃣ Clone the repository
 
-First, navigate to your desired folder in the terminal:
+Navigate to your desired folder in the terminal and clone the project:
 
 ```bash
 cd /path/to/your/desired/folder
-git clone https://github.com/https://github.com/Chandan393/Task-Management-System.git
+git clone https://github.com/Chandan393/Task-Management-System.git
+cd Task-Management-System
+```
 
----
+### 2️⃣ Build the project
 
-## 🚀 How to Run
+Use Maven to build the project:
 
-### 1️⃣ Build the project
 ```bash
 mvn clean package
 ```
 
-### 2️⃣ Run the application
+### 3️⃣ Run the application
+
+Start the Spring Boot application:
+
 ```bash
 mvn spring-boot:run
 ```
+
+The application will be available at `http://localhost:8080/tasks`.
+
 
 Once the application starts, it will be available at:  
 👉 **http://localhost:8080/tasks**
